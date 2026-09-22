@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hayotim — Kunlik nazorat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-deep: #060a1f;
+    --navy-mid: #10193f;
+    --blue-core: #2947e0;
+    --blue-light: #6f8cff;
+    --azure-glow: #9fc1ff;
+    --amber: #f5a623;
+    --amber-soft: #ffcf7a;
+    --mint: #4fd6c0;
+    --coral: #ff6b6b;
+    --ink: #eef1ff;
+    --ink-dim: #aab3d6;
+    --ink-faint: #6c76a3;
+    --card: rgba(255,255,255,0.055);
+    --card-border: rgba(255,255,255,0.09);
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background:
+      radial-gradient(120% 60% at 50% -10%, #8fb8ff 0%, #3c5fe0 22%, #101c4d 46%, #060a1f 72%, #030512 100%);
+    color: var(--ink);
+    min-height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 20px 18px 100px;
+    min-height: 100vh;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .greet-label {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin: 0 0 2px;
+  }
+  .greet-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--blue-light), var(--amber));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--navy-deep);
+    flex-shrink: 0;
+  }
+
+  /* ---------- Hero AI summary ---------- */
+  .hero {
+    background: linear-gradient(160deg, rgba(111,140,255,0.22), rgba(41,71,224,0.10) 55%, rgba(255,255,255,0.04));
+    border: 1px solid rgba(159,193,255,0.28);
+    border-radius: var(--radius-lg);
+    padding: 20px 20px 18px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(159,193,255,0.35), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--azure-glow);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .hero-eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 8px var(--mint);
+  }
+  .hero-text {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0 0 14px;
+    position: relative;
+  }
+  .hero-text b { color: var(--amber-soft); font-weight: 600; }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-sm);
+    padding: 10px 8px;
+    text-align: left;
+  }
+  .hero-stat .num {
+    font-family: 'Sora', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    display: block;
+  }
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: var(--ink-dim);
+    margin-top: 2px;
+    display: block;
+  }
+  .hero-stat.up .num { color: var(--coral); }
+  .hero-stat.down .num { color: var(--mint); }
+
+  /* ---------- Section ---------- */
+  .section {
+    margin-bottom: 16px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 2px;
+  }
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+  }
+  .section-link {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+
+  /* Sleep card */
+  .sleep-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .sleep-ring {
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: conic-gradient(var(--mint) 0deg, var(--mint) calc(var(--pct,75) * 3.6deg), rgba(255,255,255,0.08) 0deg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sleep-ring-inner {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: #0c1436;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .sleep-detail { flex: 1; }
+  .sleep-detail .h { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 14.5px; margin-bottom: 3px; }
+  .sleep-detail .s { font-size: 12.5px; color: var(--ink-dim); line-height: 1.4; }
+  .sleep-bars {
+    display: flex;
+    gap: 5px;
+    margin-top: 14px;
+    align-items: flex-end;
+    height: 48px;
+  }
+  .sleep-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--blue-light), rgba(111,140,255,0.25));
+    border-radius: 5px 5px 3px 3px;
+    position: relative;
+  }
+  .sleep-bar.low { background: linear-gradient(180deg, var(--coral), rgba(255,107,107,0.25)); }
+  .sleep-bar-label {
+    position: absolute;
+    bottom: -18px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  /* Money card */
+  .money-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+  .money-total .amt {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .money-total .amt span { font-size: 13px; color: var(--ink-dim); font-weight: 500; }
+  .money-total .delta {
+    font-size: 12.5px;
+    color: var(--coral);
+    background: rgba(255,107,107,0.12);
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .cat-row:first-of-type { border-top: none; padding-top: 0; }
+  .cat-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .cat-icon.food { background: rgba(245,166,35,0.16); }
+  .cat-icon.taxi { background: rgba(111,140,255,0.16); }
+  .cat-icon.fun { background: rgba(79,214,192,0.16); }
+  .cat-name { flex: 1; font-size: 13.5px; }
+  .cat-amt { font-size: 13.5px; font-weight: 600; font-family: 'Sora', sans-serif; }
+  .cat-bar-track {
+    height: 4px; border-radius: 4px;
+    background: rgba(255,255,255,0.07);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .cat-bar-fill { height: 100%; border-radius: 4px; }
+
+  /* Reminders */
+  .reminder-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .reminder-item:first-child { border-top: none; padding-top: 0; }
+  .reminder-check {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .reminder-check.done {
+    background: var(--mint);
+    border-color: var(--mint);
+    color: #06301f;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .reminder-text { flex: 1; font-size: 13.5px; }
+  .reminder-text.done { color: var(--ink-faint); text-decoration: line-through; }
+  .reminder-time { font-size: 12px; color: var(--ink-faint); }
+
+  .add-fab {
+    width: 100%;
+    background: transparent;
+    border: 1.5px dashed rgba(255,255,255,0.18);
+    border-radius: var(--radius-sm);
+    color: var(--ink-dim);
+    font-size: 13px;
+    padding: 11px;
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+  }
+
+  /* Quick input bar */
+  .quick-input {
+    display: flex;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 6px 6px 6px 16px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .quick-input input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+  }
+  .quick-input input::placeholder { color: var(--ink-faint); }
+  .quick-input button {
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-core));
+    border: none;
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Bottom nav */
+  .tabbar {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 0px);
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 14px;
+    pointer-events: none;
+  }
+  .tabbar-inner {
+    pointer-events: all;
+    display: flex;
+    gap: 4px;
+    background: rgba(10,15,40,0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 16px;
+    border-radius: 13px;
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+  }
+  .tab.active {
+    background: rgba(111,140,255,0.16);
+    color: var(--azure-glow);
+  }
+  .tab .icon { font-size: 17px; }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ink: #eef1ff;
+    }
+  }
+
+  /* ---------- Onboarding ---------- */
+  .onboard {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 32px;
+    padding-top: calc(40px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+    z-index: 50;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .onboard.leaving {
+    opacity: 0;
+    transform: scale(1.04);
+    pointer-events: none;
+  }
+  .orb {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #cfe0ff, #6f8cff 45%, #2947e0 80%);
+    box-shadow: 0 0 0 rgba(111,140,255,0.5);
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: orb-in 0.9s cubic-bezier(.2,.8,.2,1) forwards, orb-pulse 2.6s ease-in-out 1s infinite;
+  }
+  @keyframes orb-in {
+    0% { opacity: 0; transform: scale(0.4); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes orb-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(111,140,255,0.25); }
+    50% { box-shadow: 0 0 0 22px rgba(111,140,255,0); }
+  }
+  .onboard-greet {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: rise-in 0.7s ease forwards;
+    animation-delay: 0.5s;
+  }
+  .onboard-tag {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-dim);
+    max-width: 300px;
+    margin: 0 0 40px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: rise-in 0.7s ease forwards;
+    animation-delay: 0.8s;
+  }
+  .onboard-tag b { color: var(--azure-glow); font-weight: 600; }
+  @keyframes rise-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .onboard-btn {
+    opacity: 0;
+    animation: rise-in 0.7s ease forwards;
+    animation-delay: 1.15s;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-core));
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 15px 36px;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 12px 28px rgba(41,71,224,0.35);
+  }
+  .onboard-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 26px;
+    opacity: 0;
+    animation: rise-in 0.7s ease forwards;
+    animation-delay: 1.15s;
+  }
+  .onboard-dots span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+  }
+  .onboard-dots span:first-child {
+    background: var(--azure-glow);
+    width: 18px;
+    border-radius: 4px;
+  }
+
+  .app { display: none; }
+  .app.visible {
+    display: block;
+    animation: app-in 0.6s ease forwards;
+  }
+  @keyframes app-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-cta {
+    margin-top: 14px;
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: var(--azure-glow);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .note-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    cursor: pointer;
+  }
+  .note-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(245,166,35,0.14);
+    color: var(--amber-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .note-body { flex: 1; }
+  .note-title { font-size: 13.5px; font-weight: 600; }
+  .note-sub { font-size: 11.5px; color: var(--ink-faint); margin-top: 1px; }
+  .note-plus {
+    font-size: 18px;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- Screens ---------- */
+  .screen { display: none; }
+  .screen.active { display: block; animation: app-in 0.4s ease forwards; }
+
+  /* ---------- Stats screen ---------- */
+  .stats-header {
+    margin-bottom: 18px;
+  }
+  .stats-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .stats-sub {
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    margin: 0;
+  }
+  .range-toggle {
+    display: flex;
+    gap: 6px;
+    margin: 14px 0 18px;
+  }
+  .range-toggle button {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--card-border);
+    color: var(--ink-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 9px;
+    border-radius: 11px;
+    cursor: pointer;
+  }
+  .range-toggle button.active {
+    background: var(--blue-light);
+    border-color: var(--blue-light);
+    color: #0a1030;
+  }
+
+  .insight-card {
+    display: flex;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(255,166,35,0.10), rgba(255,255,255,0.03));
+    border: 1px solid rgba(245,166,35,0.22);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .insight-card .ic { font-size: 18px; flex-shrink: 0; }
+  .insight-card .txt { font-size: 12.5px; line-height: 1.55; color: var(--ink); }
+  .insight-card .txt b { color: var(--amber-soft); font-weight: 600; }
+
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .chart-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .chart-card-title { font-size: 13.5px; font-weight: 600; }
+  .chart-card-val { font-family: 'Sora', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--azure-glow); }
+  .chart-svg { width: 100%; height: auto; display: block; }
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .chart-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .chart-legend i {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block;
+  }
+
+  .corr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .corr-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+  .corr-card .k { font-size: 11px; color: var(--ink-faint); margin-bottom: 6px; }
+  .corr-card .v { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; }
+  .corr-card .v.neg { color: var(--coral); }
+  .corr-card .v.pos { color: var(--mint); }
+
+  /* ---------- Chat screen ---------- */
+  .chat-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 8px;
+  }
+  .msg {
+    max-width: 84%;
+    padding: 11px 14px;
+    border-radius: 17px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .msg.bot {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-bottom-left-radius: 5px;
+    color: var(--ink);
+  }
+  .msg.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-core));
+    color: #fff;
+    border-bottom-right-radius: 5px;
+  }
+  .msg-route {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--mint);
+    background: rgba(79,214,192,0.10);
+    border: 1px solid rgba(79,214,192,0.28);
+    padding: 6px 13px;
+    border-radius: 20px;
+    margin: -2px 0 2px 4px;
+    cursor: pointer;
+  }
+  .chat-day-label {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin: 4px 0 2px;
+  }
+
+  .chat-input-dock {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    display: none;
+    justify-content: center;
+    padding: 0 18px;
+    z-index: 40;
+  }
+  .chat-input-dock.visible { display: flex; }
+  .chat-input-dock .quick-input {
+    width: 100%;
+    max-width: 424px;
+    margin-bottom: 0;
+    background: rgba(13,20,50,0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.32);
+  }
+
+  /* ---------- Settings placeholder ---------- */
+  .settings-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-dim);
+  }
+  .settings-empty .ic { font-size: 34px; margin-bottom: 14px; }
+  .settings-empty .t { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 15px; color: var(--ink); margin-bottom: 6px; }
+  .settings-empty .s { font-size: 12.5px; line-height: 1.5; max-width: 240px; margin: 0 auto; }
+
+  /* ---------- Compact 6-tab bar ---------- */
+  .tabbar-inner {
+    gap: 1px;
+    padding: 6px;
+  }
+  .tab {
+    padding: 7px 9px;
+    font-size: 9.5px;
+  }
+  .tab .icon { font-size: 16px; }
+
+  /* ---------- Expense category grid ---------- */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .cat-tile {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 16px 14px;
+    cursor: pointer;
+  }
+  .cat-tile-icon {
+    width: 40px; height: 40px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+  .cat-tile-icon.food { background: rgba(245,166,35,0.16); }
+  .cat-tile-icon.taxi { background: rgba(111,140,255,0.16); }
+  .cat-tile-icon.fun { background: rgba(79,214,192,0.16); }
+  .cat-tile-icon.sub { background: rgba(255,107,107,0.16); }
+  .cat-tile-icon.cloth { background: rgba(159,193,255,0.16); }
+  .cat-tile-icon.health { background: rgba(79,214,192,0.16); }
+  .cat-tile-icon.other { background: rgba(255,255,255,0.10); }
+  .cat-tile-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .cat-tile-sum { font-family: 'Sora', sans-serif; font-size: 14.5px; font-weight: 700; color: var(--ink-dim); }
+
+  /* ---------- Amount modal ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(3,5,18,0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 100;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-sheet {
+    width: 100%;
+    max-width: 460px;
+    background: #0d1638;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    border-radius: 26px 26px 0 0;
+    padding: 22px 22px calc(28px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(30px);
+    transition: transform 0.3s cubic-bezier(.2,.8,.2,1);
+  }
+  .modal-overlay.open .modal-sheet {
+    transform: translateY(0);
+  }
+  .modal-handle {
+    width: 36px; height: 4px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.18);
+    margin: 0 auto 18px;
+  }
+  .modal-cat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .modal-cat-icon {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    background: rgba(111,140,255,0.16);
+  }
+  .modal-cat-name { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 15px; }
+  .modal-amount-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    border-bottom: 1.5px solid rgba(255,255,255,0.14);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  .modal-amount-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ink);
+    font-family: 'Sora', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    width: 100%;
+  }
+  .modal-amount-row input::placeholder { color: var(--ink-faint); }
+  .modal-amount-row .unit { font-size: 15px; color: var(--ink-dim); font-weight: 600; }
+  .modal-note {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 11px 13px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 16px;
+  }
+  .modal-note::placeholder { color: var(--ink-faint); }
+  .modal-save {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-core));
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 15px;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+
+  /* ---------- Sleep modal ---------- */
+  .stepper-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 10px 0 22px;
+  }
+  .stepper-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.05);
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .stepper-val {
+    font-family: 'Sora', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    min-width: 110px;
+    text-align: center;
+  }
+  .stepper-val span { font-size: 15px; color: var(--ink-dim); font-weight: 500; }
+  .quality-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .quality-chip {
+    flex: 1;
+    text-align: center;
+    padding: 11px 6px;
+    border-radius: 12px;
+    border: 1.5px solid var(--card-border);
+    background: rgba(255,255,255,0.04);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    cursor: pointer;
+  }
+  .quality-chip.selected {
+    border-color: var(--mint);
+    background: rgba(79,214,192,0.14);
+    color: var(--mint);
+  }
+
+  /* ---------- Avatar / Profile dropdown ---------- */
+  .avatar {
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .avatar:active { transform: scale(0.9); }
+
+  .profile-menu {
+    position: absolute;
+    top: 68px;
+    right: 18px;
+    width: 250px;
+    background: rgba(14,21,52,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    z-index: 60;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+    transform-origin: top right;
+    pointer-events: none;
+    transition: opacity 0.22s cubic-bezier(.2,.8,.2,1), transform 0.22s cubic-bezier(.2,.8,.2,1);
+  }
+  .profile-menu.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+  .profile-head {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 6px;
+  }
+  .profile-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--blue-light), var(--amber));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    color: var(--navy-deep);
+    flex-shrink: 0;
+  }
+  .profile-name { font-size: 13.5px; font-weight: 600; }
+  .profile-plan { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+  .profile-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 10px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .profile-item:active { background: rgba(255,255,255,0.06); }
+  .profile-item .pi-ic { font-size: 15px; width: 18px; text-align: center; }
+  .profile-item.pro {
+    background: linear-gradient(135deg, rgba(245,166,35,0.16), rgba(255,255,255,0.03));
+    border: 1px solid rgba(245,166,35,0.28);
+    margin-bottom: 4px;
+  }
+  .profile-item.pro .pi-txt b { color: var(--amber-soft); }
+
+  /* ---------- Entry count grid (Tahlil) ---------- */
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 14px 0;
+  }
+  .entry-tile {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .entry-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--azure-glow);
+  }
+  .entry-lbl {
+    font-size: 10.5px;
+    color: var(--ink-dim);
+    margin-top: 2px;
+  }
+
+  /* ---------- Premium micro-interactions ---------- */
+  .tab { transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease; }
+  .tab:active { transform: scale(0.88); }
+  .cat-tile, .card, .note-card, .msg-route, .reminder-item, .modal-save, .add-fab, .hero-cta {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .cat-tile:active, .note-card:active, .msg-route:active, .modal-save:active, .add-fab:active {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+  .msg {
+    animation: msg-in 0.35s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .msg-route { animation: msg-in 0.35s cubic-bezier(.2,.8,.2,1) both; animation-delay: 0.08s; }
+</style>
+</head>
+<body>
+
+<div class="onboard" id="onboard">
+  <div class="orb"></div>
+  <p class="onboard-greet">Salom, Diyorbek 👋</p>
+  <p class="onboard-tag">
+    <b>Hayotim</b> — uyqu, moliya va vazifalaringizni bitta joyda kuzatib boradi. Shunchaki yozing, qolganini AI hal qiladi.
+  </p>
+  <button class="onboard-btn" id="onboardBtn">Davom etish →</button>
+  <div class="onboard-dots"><span></span><span></span><span></span></div>
+</div>
+
+<div class="app" id="app">
+
+  <div class="header">
+    <div>
+      <p class="greet-label">Assalomu alaykum 👋</p>
+      <p class="greet-name">Diyorbek</p>
+    </div>
+    <button class="avatar" id="avatarBtn" onclick="toggleProfile()">D</button>
+  </div>
+
+  <div class="profile-menu" id="profileMenu">
+    <div class="profile-head">
+      <div class="profile-avatar">D</div>
+      <div>
+        <div class="profile-name">Diyorbek Karimov</div>
+        <div class="profile-plan">Bepul reja</div>
+      </div>
+    </div>
+    <button class="profile-item pro" onclick="">
+      <span class="pi-ic">✨</span>
+      <span class="pi-txt"><b>SGX Pro</b>ga o'ting — cheklovlarsiz AI</span>
+    </button>
+    <button class="profile-item" onclick="">
+      <span class="pi-ic">👤</span><span class="pi-txt">Profil</span>
+    </button>
+    <button class="profile-item" onclick="">
+      <span class="pi-ic">🔔</span><span class="pi-txt">Bildirishnomalar</span>
+    </button>
+    <button class="profile-item" onclick="">
+      <span class="pi-ic">🌐</span><span class="pi-txt">Til — O'zbekcha</span>
+    </button>
+    <button class="profile-item" onclick="">
+      <span class="pi-ic">⚙️</span><span class="pi-txt">Sozlamalar</span>
+    </button>
+  </div>
+
+  <!-- ================= 1. CHAT (Bosh sahifa) ================= -->
+  <div class="screen active" id="screen-chat">
+
+    <div class="chat-day-label">Bugun, 20 sentabr</div>
+
+    <div class="chat-thread">
+      <div class="msg bot">Salom! Menga kuningiz haqida shunchaki yozing — men avtomatik ravishda kerakli bo'limga joylayman 👇</div>
+
+      <div class="msg user">Bugun soat 9:30 da Andrey bilan uchrashuvim bor</div>
+      <div class="msg-route" onclick="showScreen('reminders')">🔔 Eslatmalarga qo'shildi — 09:30 <span style="opacity:.6">→</span></div>
+
+      <div class="msg user">20000 so'm taksiga sarfladim</div>
+      <div class="msg-route" onclick="showScreen('expenses')">💳 Xarajatlarga qo'shildi — Transport <span style="opacity:.6">→</span></div>
+
+      <div class="msg user">6.5 soat uxladim, unchalik yaxshi emas</div>
+      <div class="msg-route" onclick="showScreen('sleep')">😴 Uyquga qo'shildi — 6.5 soat <span style="opacity:.6">→</span></div>
+    </div>
+
+  </div><!-- /screen-chat -->
+
+  <!-- ================= 2. UYQU ================= -->
+  <div class="screen" id="screen-sleep">
+    <div class="stats-header">
+      <p class="stats-title">Uyqu</p>
+      <p class="stats-sub">Bu hafta · o'rtacha 5.8 soat</p>
+    </div>
+    <div class="card">
+      <div class="sleep-row">
+        <div class="sleep-ring" style="--pct:64">
+          <div class="sleep-ring-inner">64%</div>
+        </div>
+        <div class="sleep-detail">
+          <div class="h">O'rtacha sifat — yaxshilanmoqda</div>
+          <div class="s">Kecha 6.5 soat uxladingiz. Odatiy vaqtingizdan 40 daqiqa kech yotdingiz.</div>
+        </div>
+      </div>
+      <div class="sleep-bars">
+        <div class="sleep-bar" style="height:70%"><span class="sleep-bar-label">Du</span></div>
+        <div class="sleep-bar" style="height:85%"><span class="sleep-bar-label">Se</span></div>
+        <div class="sleep-bar low" style="height:40%"><span class="sleep-bar-label">Ch</span></div>
+        <div class="sleep-bar" style="height:60%"><span class="sleep-bar-label">Pa</span></div>
+        <div class="sleep-bar low" style="height:35%"><span class="sleep-bar-label">Ju</span></div>
+        <div class="sleep-bar" style="height:90%"><span class="sleep-bar-label">Sh</span></div>
+        <div class="sleep-bar" style="height:75%"><span class="sleep-bar-label">Ya</span></div>
+      </div>
+      <button class="add-fab" onclick="openSleepModal()">+ Bugungi uyquni kiritish</button>
+    </div>
+  </div><!-- /screen-sleep -->
+
+  <!-- ================= 3. ESLATMALAR ================= -->
+  <div class="screen" id="screen-reminders">
+    <div class="stats-header">
+      <p class="stats-title">Eslatmalar</p>
+      <p class="stats-sub">Bugun · 4 tadan 6 tasi bajarildi</p>
+    </div>
+    <div class="card">
+      <div class="reminder-item">
+        <div class="reminder-check done">✓</div>
+        <div class="reminder-text done">Ertalabki dori</div>
+        <div class="reminder-time">09:00</div>
+      </div>
+      <div class="reminder-item">
+        <div class="reminder-check"></div>
+        <div class="reminder-text">Andrey bilan uchrashuv</div>
+        <div class="reminder-time">09:30</div>
+      </div>
+      <div class="reminder-item">
+        <div class="reminder-check"></div>
+        <div class="reminder-text">Onaga qo'ng'iroq qilish</div>
+        <div class="reminder-time">18:00</div>
+      </div>
+      <div class="reminder-item">
+        <div class="reminder-check"></div>
+        <div class="reminder-text">Sport zali</div>
+        <div class="reminder-time">19:30</div>
+      </div>
+      <button class="add-fab">+ Yangi eslatma qo'shish</button>
+    </div>
+  </div><!-- /screen-reminders -->
+
+  <!-- ================= 4. FIKR VA YOZUVLAR ================= -->
+  <div class="screen" id="screen-notes">
+    <div class="stats-header">
+      <p class="stats-title">Fikr va yozuvlar</p>
+      <p class="stats-sub">Shaxsiy qaydlaringiz</p>
+    </div>
+    <div class="card">
+      <div class="reminder-item" style="align-items:flex-start">
+        <div class="cat-icon fun" style="margin-top:1px">✎</div>
+        <div style="flex:1">
+          <div class="reminder-text">Bugun ish joyida yaxshi taklif oldim, ertaga o'ylab ko'raman</div>
+          <div class="note-sub" style="margin-top:4px">Bugun, 14:20</div>
+        </div>
+      </div>
+      <div class="reminder-item" style="align-items:flex-start">
+        <div class="cat-icon taxi" style="margin-top:1px">✎</div>
+        <div style="flex:1">
+          <div class="reminder-text">Kitob o'qishni qayta boshlashim kerak, uzoq vaqt to'xtatib qo'ydim</div>
+          <div class="note-sub" style="margin-top:4px">Kecha, 21:05</div>
+        </div>
+      </div>
+      <button class="add-fab">+ Yangi fikr yoki qayd qoldirish</button>
+    </div>
+  </div><!-- /screen-notes -->
+
+  <!-- ================= 5. XARAJATLAR ================= -->
+  <div class="screen" id="screen-expenses">
+
+    <div class="stats-header">
+      <p class="stats-title">Xarajatlar</p>
+      <p class="stats-sub">Sentabr oyi · jami 412,000 so'm</p>
+    </div>
+
+    <div class="cat-grid">
+      <div class="cat-tile" onclick="openExpenseModal('Oziq-ovqat','🍜','food')">
+        <div class="cat-tile-icon food">🍜</div>
+        <div class="cat-tile-name">Oziq-ovqat</div>
+        <div class="cat-tile-sum">168,000</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Transport','🚕','taxi')">
+        <div class="cat-tile-icon taxi">🚕</div>
+        <div class="cat-tile-name">Transport</div>
+        <div class="cat-tile-sum">144,000</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Ko\'ngilochar','🎬','fun')">
+        <div class="cat-tile-icon fun">🎬</div>
+        <div class="cat-tile-name">Ko'ngilochar</div>
+        <div class="cat-tile-sum">72,000</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Obunalar','📱','sub')">
+        <div class="cat-tile-icon sub">📱</div>
+        <div class="cat-tile-name">Obunalar</div>
+        <div class="cat-tile-sum">38,000</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Kiyim-kechak','👕','cloth')">
+        <div class="cat-tile-icon cloth">👕</div>
+        <div class="cat-tile-name">Kiyim-kechak</div>
+        <div class="cat-tile-sum">0</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Sog\'liq','💊','health')">
+        <div class="cat-tile-icon health">💊</div>
+        <div class="cat-tile-name">Sog'liq</div>
+        <div class="cat-tile-sum">10,000</div>
+      </div>
+      <div class="cat-tile" onclick="openExpenseModal('Boshqa','🗂️','other')">
+        <div class="cat-tile-icon other">🗂️</div>
+        <div class="cat-tile-name">Boshqa</div>
+        <div class="cat-tile-sum">0</div>
+      </div>
+    </div>
+
+  </div><!-- /screen-expenses -->
+
+  <!-- ================= 6. TAHLIL (Statistika) ================= -->
+  <div class="screen" id="screen-stats">
+    <div class="stats-header">
+      <p class="stats-title">Tahlil</p>
+      <p class="stats-sub">13 — 20 sentabr</p>
+    </div>
+
+    <div class="range-toggle">
+      <button class="active">Hafta</button>
+      <button>Oy</button>
+      <button>3 oy</button>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic">💡</div>
+      <div class="txt">Uyqungiz <b>6 soatdan kam</b> bo'lgan kunlarda ovqatga xarajatingiz o'rtacha <b>23% ko'proq</b> bo'lgan.</div>
+    </div>
+
+    <div class="entry-grid">
+      <div class="entry-tile">
+        <div class="entry-num">27</div>
+        <div class="entry-lbl">Jami yozuv</div>
+      </div>
+      <div class="entry-tile">
+        <div class="entry-num">9</div>
+        <div class="entry-lbl">💳 Xarajat</div>
+      </div>
+      <div class="entry-tile">
+        <div class="entry-num">7</div>
+        <div class="entry-lbl">😴 Uyqu</div>
+      </div>
+      <div class="entry-tile">
+        <div class="entry-num">6</div>
+        <div class="entry-lbl">🔔 Eslatma</div>
+      </div>
+      <div class="entry-tile">
+        <div class="entry-num">5</div>
+        <div class="entry-lbl">✎ Fikr</div>
+      </div>
+      <div class="entry-tile">
+        <div class="entry-num">83%</div>
+        <div class="entry-lbl">Bajarildi</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-head">
+        <span class="chart-card-title">😴 Uyqu dinamikasi</span>
+        <span class="chart-card-val">O'rtacha 5.8s</span>
+      </div>
+      <svg class="chart-svg" viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="30" x2="320" y2="30" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="0" y1="60" x2="320" y2="60" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="0" y1="90" x2="320" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <polyline points="10,50 60,32 110,78 160,60 210,85 260,20 310,45"
+          fill="none" stroke="#6f8cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="10" cy="50" r="3" fill="#9fc1ff"/>
+        <circle cx="60" cy="32" r="3" fill="#9fc1ff"/>
+        <circle cx="110" cy="78" r="3" fill="#ff6b6b"/>
+        <circle cx="160" cy="60" r="3" fill="#9fc1ff"/>
+        <circle cx="210" cy="85" r="3" fill="#ff6b6b"/>
+        <circle cx="260" cy="20" r="3" fill="#4fd6c0"/>
+        <circle cx="310" cy="45" r="3" fill="#9fc1ff"/>
+      </svg>
+      <div class="chart-legend">
+        <span><i style="background:#4fd6c0"></i>Yaxshi</span>
+        <span><i style="background:#9fc1ff"></i>O'rtacha</span>
+        <span><i style="background:#ff6b6b"></i>Yetarli emas</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-head">
+        <span class="chart-card-title">💳 Xarajatlar tendensiyasi</span>
+        <span class="chart-card-val">↑ 18%</span>
+      </div>
+      <svg class="chart-svg" viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5a623" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#f5a623" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <polyline points="10,80 60,70 110,72 160,55 210,58 260,25 310,15"
+          fill="none" stroke="#f5a623" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="10,80 60,70 110,72 160,55 210,58 260,25 310,15 310,110 10,110" fill="url(#fillGrad)"/>
+      </svg>
+      <div class="chart-legend">
+        <span><i style="background:#f5a623"></i>Kunlik xarajat, so'm</span>
+      </div>
+    </div>
+
+    <div class="corr-grid">
+      <div class="corr-card">
+        <div class="k">Eng faol kun</div>
+        <div class="v">Juma</div>
+      </div>
+      <div class="corr-card">
+        <div class="k">Bajarilgan eslatmalar</div>
+        <div class="v pos">83%</div>
+      </div>
+      <div class="corr-card">
+        <div class="k">O'rtacha kayfiyat</div>
+        <div class="v">7.2/10</div>
+      </div>
+      <div class="corr-card">
+        <div class="k">Eng ko'p xarajat</div>
+        <div class="v neg">Oziq-ovqat</div>
+      </div>
+    </div>
+
+  </div><!-- /screen-stats -->
+
+</div>
+
+<div class="chat-input-dock" id="chatInputDock">
+  <div class="quick-input">
+    <input type="text" placeholder="Masalan: 15000 taksiga, 7 soat uxladim..." id="chatInput" />
+    <button aria-label="Yuborish" onclick="sendChatMessage()">→</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="expenseModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-cat">
+      <div class="modal-cat-icon" id="modalCatIcon">🍜</div>
+      <div class="modal-cat-name" id="modalCatName">Oziq-ovqat</div>
+    </div>
+    <div class="modal-amount-row">
+      <input type="number" inputmode="numeric" id="modalAmount" placeholder="0" autofocus>
+      <span class="unit">so'm</span>
+    </div>
+    <input type="text" class="modal-note" id="modalNote" placeholder="Izoh (ixtiyoriy) — masalan, hot-dog">
+    <button class="modal-save" onclick="saveExpense()">Saqlash</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sleepModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-cat">
+      <div class="modal-cat-icon" style="background:rgba(79,214,192,0.16)">😴</div>
+      <div class="modal-cat-name">Bugun necha soat uxladingiz?</div>
+    </div>
+    <div class="stepper-row">
+      <button class="stepper-btn" onclick="changeSleep(-0.5)">−</button>
+      <div class="stepper-val" id="sleepVal">7.0<span> soat</span></div>
+      <button class="stepper-btn" onclick="changeSleep(0.5)">+</button>
+    </div>
+    <div class="quality-row">
+      <div class="quality-chip" data-q="yomon" onclick="selectQuality(this)">😔 Yomon</div>
+      <div class="quality-chip selected" data-q="ortacha" onclick="selectQuality(this)">😐 O'rtacha</div>
+      <div class="quality-chip" data-q="yaxshi" onclick="selectQuality(this)">😊 Yaxshi</div>
+    </div>
+    <button class="modal-save" onclick="saveSleep()">Saqlash</button>
+  </div>
+</div>
+
+<div class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab active" id="tab-chat" onclick="showScreen('chat')"><span class="icon">💬</span>Bosh sahifa</button>
+    <button class="tab" id="tab-sleep" onclick="showScreen('sleep')"><span class="icon">🌙</span>Uyqu</button>
+    <button class="tab" id="tab-reminders" onclick="showScreen('reminders')"><span class="icon">🔔</span>Eslatma</button>
+    <button class="tab" id="tab-notes" onclick="showScreen('notes')"><span class="icon">📝</span>Fikr</button>
+    <button class="tab" id="tab-expenses" onclick="showScreen('expenses')"><span class="icon">💳</span>Xarajat</button>
+    <button class="tab" id="tab-stats" onclick="showScreen('stats')"><span class="icon">📊</span>Tahlil</button>
+  </div>
+</div>
+
+
+<script>
+  document.getElementById('onboardBtn').addEventListener('click', function() {
+    var onboard = document.getElementById('onboard');
+    var app = document.getElementById('app');
+    onboard.classList.add('leaving');
+    app.classList.add('visible');
+    document.getElementById('chatInputDock').classList.add('visible');
+    setTimeout(function() { onboard.style.display = 'none'; }, 520);
+  });
+
+  var screens = ['chat','sleep','reminders','notes','expenses','stats'];
+
+  function toggleProfile() {
+    document.getElementById('profileMenu').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var menu = document.getElementById('profileMenu');
+    var btn = document.getElementById('avatarBtn');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && e.target !== btn) {
+      menu.classList.remove('open');
+    }
+  });
+
+  function showScreen(name) {
+    screens.forEach(function(s) {
+      document.getElementById('screen-' + s).classList.toggle('active', s === name);
+      document.getElementById('tab-' + s).classList.toggle('active', s === name);
+    });
+    document.getElementById('chatInputDock').classList.toggle('visible', name === 'chat' && document.getElementById('app').classList.contains('visible'));
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function sendChatMessage() {
+    var input = document.getElementById('chatInput');
+    if (!input.value.trim()) return;
+    // Bu yerda xabar backend'ga (AI klassifikatorga) yuboriladi,
+    // u avtomatik ravishda tur (xarajat/uyqu/eslatma)ni aniqlaydi
+    // va tegishli bo'limga saqlaydi.
+    input.value = '';
+  }
+
+  function openExpenseModal(name, emoji, iconClass) {
+    document.getElementById('modalCatName').textContent = name;
+    var icon = document.getElementById('modalCatIcon');
+    icon.textContent = emoji;
+    icon.className = 'modal-cat-icon ' + iconClass;
+    document.getElementById('modalAmount').value = '';
+    document.getElementById('modalNote').value = '';
+    document.getElementById('expenseModal').classList.add('open');
+    setTimeout(function(){ document.getElementById('modalAmount').focus(); }, 300);
+  }
+  function closeExpenseModal() {
+    document.getElementById('expenseModal').classList.remove('open');
+  }
+  document.getElementById('expenseModal').addEventListener('click', function(e) {
+    if (e.target === this) closeExpenseModal();
+  });
+  function saveExpense() {
+    var amount = document.getElementById('modalAmount').value;
+    if (!amount) return;
+    // Bu yerda backend'ga so'rov yuboriladi: {amount, category, note}
+    closeExpenseModal();
+  }
+
+  var sleepHours = 7.0;
+  var sleepQuality = 'ortacha';
+  function openSleepModal() {
+    sleepHours = 7.0;
+    document.getElementById('sleepVal').innerHTML = '7.0<span> soat</span>';
+    document.getElementById('sleepModal').classList.add('open');
+  }
+  function closeSleepModal() {
+    document.getElementById('sleepModal').classList.remove('open');
+  }
+  document.getElementById('sleepModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSleepModal();
+  });
+  function changeSleep(delta) {
+    sleepHours = Math.max(0, Math.min(14, sleepHours + delta));
+    document.getElementById('sleepVal').innerHTML = sleepHours.toFixed(1) + '<span> soat</span>';
+  }
+  function selectQuality(el) {
+    document.querySelectorAll('.quality-chip').forEach(function(c){ c.classList.remove('selected'); });
+    el.classList.add('selected');
+    sleepQuality = el.getAttribute('data-q');
+  }
+  function saveSleep() {
+    // Bu yerda backend'ga so'rov yuboriladi: {hours: sleepHours, quality: sleepQuality}
+    closeSleepModal();
+  }
+</script>
+</body>
+</html>
